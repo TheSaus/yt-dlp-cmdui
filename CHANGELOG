@@ -1,6 +1,40 @@
 Changelog for yt-dlp-cmdui, made by The-Saus
 
 ---------------------------------------------------------------------------------------------------
-18/05/2022
+# 06/06/2022 | Version 2
+## Additions
+- Added -P arguments to separate directories for certain files.
+  - Temporary files go into their own folder instead of the output folder.
+  - Thumbnails, Subtitles, and Metadata now get saved to their own folders.
+  - A .url file is generated for each (Video/Audio) download in its own folder. this should work as a sort of history.
+- Added Optional Subtitle Writing
+  - Works the same as Thumbnail/Metadata writing, just makes a file on disk.
+- Added Custom Audio Preset, Allowing you to choose bitrate
+  - Choose between 4 preset bitrates
+    - 64kbps
+    - 96kbps
+    - 128kbps
+    - 256kbps
+  - Specify Overwrites and Archive, like the Video option.
+- Added tmp directory
+  - Downloads are stored in tmp until they finish downloading, after which they get moved to their respective folders.
+- Added General File Downloader
+  - Uses the already available aria2c.exe to download files faster by using 16 connections instead of 1.
+  - Uses its own directory 'General File Output'.
+- Added Video Preset with pre-selected options
+  - 1080p
+  - Overwrites Enabled
+  - Archive Enabled
+- Added Audio Preset with pre-selected options
+  - 96kbps
+  - Overwrites Enabled
+  - Archive Enabled
+## Removals
+- Removed BEST quality option
+  - with 4K being an option i found it unnecessary, most sites don't even have above-4K content.
+## Other
+- Moved some code around/Cleaned up a bit
+---------------------------------------------------------------------------------------------------
+18/05/2022 | Version 1
 	- Inital Release
 ---------------------------------------------------------------------------------------------------
