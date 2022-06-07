@@ -1,123 +1,133 @@
 @echo off
+REM temp path
+set tmpPath=-P "temp:%~dp0.\tmp"
+REM thumbnail path
+set thumPath=-P "thumbnail:Thumbnails"
+REM metadata path
+set metaPath=-P "infojson:Metadata"
+REM subtitles path
+set subtPath=-P "subtitle:Subtitles"
+REM link path
+set linkPath=-P "link:Links"
+REM combine all %xPath%
+set allPath=%pPath% %tmpPath% %thumPath% %metaPath% %subtPath% %linkPath%
+REM video file path
+set vidPath=-o "%%(title)s.%%(ext)s" -P "%~dp0.\Video Output"
+REM audio file path
+set audPath=-o "%%(title)s.%%(ext)s" -P "%~dp0.\Audio Output"
+REM default arguments for yt-dlp
+set defaultArgs=--external-downloader=aria2c --external-downloader-args "-j 16 -x 16 -s 16 -k 1M" --no-warnings --progress --sponsorblock-remove default --throttled-rate 100K --write-link -c %allPath% -a "%~dp0.\URLs.txt"
+REM default values for thumbnail writing/embedding/converting, and metadata writing/embedding
+set yesExtra=--write-thumbnail --write-info-json --convert-thumbnails png --write-subs
+set noExtra=--no-write-thumbnail --no-write-info-json
+
 :Start
-REM check if required files exist, if not then download them
+REM check if required files exist, if not, download them
 if not exist "%~dp0\yt-dlp.exe" goto dlYTDLP
 if not exist "%~dp0\aria2c.exe" goto dlARIA2C
 if not exist "%~dp0\ffmpeg.exe" goto dlFFMPEG
 if not exist "%~dp0\ffprobe.exe" goto dlFFMPEG
 ECHO.
-REM check for yt-dlp update
+REM update yt-dlp
 yt-dlp -U
+REM Restart point, avoids yt-dlp update and required file check
 :Restart
 ECHO. > debug.log
 CLS
-
+ECHO yt-dlp-cmdui 2.0
 REM prompt for media type
-ECHO Are you downloading Audio or Video?
+ECHO What do you want to download?
 ECHO.
-ECHO Press 1 for Audio/MP3
-ECHO Press 2 for Video/MP4
 ECHO.
-CHOICE /c 12 /n
-IF ERRORLEVEL 2 GOTO vDL
+ECHO Press 1 for Audio [Custom/MP3]
+ECHO Press 2 for Audio [96kbps/Yes Overwrites/Yes Archive/MP3]
+ECHO Press 3 for Video [Custom/MP4]
+ECHO Press 4 for Video [1080p/Yes Overwrites/Yes Archive/MP4]
+ECHO Press 5 for General File Downloads [For downloading anything else at high speeds]
+ECHO.
+CHOICE /c 12345 /n
+IF ERRORLEVEL 5 GOTO generalDownloader
+IF ERRORLEVEL 4 GOTO vDL_defHD
+IF ERRORLEVEL 3 GOTO vDL
+IF ERRORLEVEL 2 GOTO aDL_defHD
 IF ERRORLEVEL 1 GOTO aDL
 
 :aDL
-CLS
-REM Tell user to fill in URLs.txt
-ECHO #Type or Paste all URLs you want downloaded, then save and exit. One URL per line > "%~dp0.\URLs.txt"
-start "" /B /WAIT notepad.exe "%~dp0.\URLs.txt"
-CLS
-
-REM prompt for overwrites
-ECHO Should overwrites be allowed?
+CALL :Options
+CALL :exOptions
+REM prompt for video max/preferred resolution
+ECHO Choose your Preferred Bitrate
 ECHO.
-CHOICE
-IF %ERRORLEVEL% EQU 2 set overwrite=--no-force-overwrites
-IF %ERRORLEVEL% EQU 1 set overwrite=--force-overwrites
-ECHO %overwrite% >> debug.log
+ECHO Press 1 for 256kbps (Very High Quality, pretty rare)
+ECHO Press 2 for 128kbps (High Quality, uncommon)
+ECHO Press 3 for 96kbps  (Standard Quality, Most common)
+ECHO Press 4 for 64kbps  (Best used for talk/radio)
+CHOICE /c 1234 /n
+IF %ERRORLEVEL% EQU 4 set abr=64
+IF %ERRORLEVEL% EQU 3 set abr=96
+IF %ERRORLEVEL% EQU 2 set abr=128
+IF %ERRORLEVEL% EQU 1 set abr=256
+ECHO abr = %abr% >> debug.log
 CLS
-
-REM prompt for archive use
-ECHO Should the archive file be used?
-ECHO The archive file prevents already-downloaded files from being re-downloaded
-ECHO.
-CHOICE
-IF %ERRORLEVEL% EQU 2 set arc=--no-download-archive
-IF %ERRORLEVEL% EQU 1 set arc=--download-archive "archive.txt"
-ECHO %arc% >> debug.log
-CLS
-
 REM download command
-set ARGS=--external-downloader=aria2c --external-downloader-args "-j 16 -x 16 -s 16 -k 1M" --add-metadata --no-warnings --progress --sponsorblock-remove default --throttled-rate 100K --embed-thumbnail -c %arc% %overwrite% -a "%~dp0.\URLs.txt"
-ECHO %ARGS% >> debug.log
 ECHO Starting downloads, this might take a while
-yt-dlp -o "%~dp0.\AudioOutput\%%(title)s.%%(abr)sabr" -f bestaudio --extract-audio --audio-format mp3 --audio-quality 0 %ARGS%
-CLS
+yt-dlp %audPath% -f "ba[abr<=%abr%]" --extract-audio --audio-format mp3 --audio-quality 0 %arc% %overwrite% %yesExtra% %defaultArgs% 2>> debug.log
 GOTO Complete
 
+:aDL_defHD
+CALL :Options
+REM download command
+ECHO Starting downloads, this might take a while
+yt-dlp %audPath% -f ba --extract-audio --audio-format mp3 --audio-quality 0 --force-overwrites --download-archive "archive.txt" %yesExtra% %defaultArgs% 2>> debug.log
+GOTO Complete
 
 :vDL
-CLS
-
-REM Tell user to fill in URLs.txt
-ECHO #Type or Paste all URLs you want downloaded, then save and exit. One URL per line > "%~dp0.\URLs.txt"
-start "" /B /WAIT notepad.exe "%~dp0.\URLs.txt"
-CLS
-
-REM prompt for overwrites
-ECHO Should overwrites be allowed?
-ECHO.
-CHOICE
-IF %ERRORLEVEL% EQU 2 set overwrite=--no-force-overwrites
-IF %ERRORLEVEL% EQU 1 set overwrite=--force-overwrites
-ECHO %overwrite% >> debug.log
-CLS
-
-REM prompt for archive use
-ECHO Should the archive file be used?
-ECHO The archive file prevents already-downloaded files from being re-downloaded
-ECHO.
-CHOICE
-IF %ERRORLEVEL% EQU 2 set arc=--no-download-archive
-IF %ERRORLEVEL% EQU 1 set arc=--download-archive "archive.txt"
-ECHO %arc% >> debug.log
-CLS
-
+CALL :Options
+CALL :exOptions
 REM prompt for video max/preferred resolution
 ECHO Choose your Preferred Resolution
 ECHO.
-ECHO Press 1 for Best Quality
-ECHO Press 2 for 4K
-ECHO Press 3 for 1440p
-ECHO Press 4 for 1080p
-ECHO Press 5 for 720p
-ECHO Press 6 for 480p
-CHOICE /c 123456 /n
-IF %ERRORLEVEL% EQU 6 set vQuality="bestvideo[width<=720][height<=480]+bestaudio/best"
-IF %ERRORLEVEL% EQU 5 set vQuality="bestvideo[width<=1280][height<=720]+bestaudio/best"
-IF %ERRORLEVEL% EQU 4 set vQuality="bestvideo[width<=1920][height<=1080]+bestaudio/best"
-IF %ERRORLEVEL% EQU 3 set vQuality="bestvideo[width<=2560][height<=1440]+bestaudio/best"
-IF %ERRORLEVEL% EQU 2 set vQuality="bestvideo[width<=3840][height<=2160]+bestaudio/best"
-IF %ERRORLEVEL% EQU 1 set vQuality="bestvideo+bestaudio/best"
+ECHO Press 1 for 4K
+ECHO Press 2 for 1440p
+ECHO Press 3 for 1080p
+ECHO Press 4 for 720p
+ECHO Press 5 for 480p
+CHOICE /c 12345 /n
+IF %ERRORLEVEL% EQU 5 set vW=720 && set vH=480
+IF %ERRORLEVEL% EQU 4 set vW=1280 && set vH=720
+IF %ERRORLEVEL% EQU 3 set vW=1920 && set vH=1080
+IF %ERRORLEVEL% EQU 2 set vW=2560&& set vH=1440
+IF %ERRORLEVEL% EQU 1 set vW=3840 && set vH=2160
+ECHO vW = %vW% >> debug.log
+ECHO vH = %vH% >> debug.log
 CLS
-
 REM download command
-set ARGS=--external-downloader=aria2c --external-downloader-args "-j 16 -x 16 -s 16 -k 1M" --add-metadata --merge-output-format mp4 --no-warnings --progress --sponsorblock-remove default --throttled-rate 100K --embed-thumbnail --embed-subs -c %arc% %overwrite% -a "%~dp0.\URLs.txt"
-ECHO %ARGS% >> debug.log
 ECHO Starting downloads, this might take a while
-yt-dlp -o "%~dp0.\VideoOutput\%%(title)s.%%(resolution)sp%%(fps)s" -f %vQuality% %ARGS%
+yt-dlp %vidPath% -f "bv[width<=%vW%][height<=%vH%]+ba/b" --merge-output-format mp4 %arc% %overwrite% %thME% %defaultArgs% 2>> debug.log
+GOTO Complete
+
+:vDL_defHD
+CALL :Options
+ECHO Starting downloads, this might take a while
+yt-dlp %vidPath% -f "bv[width<=1920][height<=1080]+ba/b" --merge-output-format mp4 --force-overwrites %thME% --download-archive "archive.txt" %defaultArgs% 2>> debug.log
+GOTO Complete
+
+:generalDownloader
 CLS
+ECHO Input download link, only 1
+set /p url=
+aria2c -d "%~dp0.\General File Output" -x 16 -s 16 -j 16 -k 1M "%url%"
+GOTO Complete
 
 REM end of script
 :Complete
-type "%~dp0.\URLs.txt" >> "%~dp0urlHistory.log"
+CLS
 ECHO.
 ECHO End of script
 ECHO.
 ECHO Restart from beginning?
 CHOICE
-IF ERRORLEVEL 2 GOTO End
+IF ERRORLEVEL 2 EXIT
 IF ERRORLEVEL 1 GOTO Restart
 
 :dlYTDLP
@@ -169,4 +179,37 @@ ECHO ffmpeg and ffprobe have downloaded
 ECHO.
 GOTO Start
 
-:End
+:Options
+CLS
+REM Tell user to fill in URLs.txt
+ECHO #Type or Paste all URLs you want downloaded, then save and exit. One URL per line > "%~dp0.\URLs.txt"
+start "" /B /WAIT notepad.exe "%~dp0.\URLs.txt"
+CLS
+ECHO.
+ECHO Download Thumbnails, Subtitles and Metadata as separate files?
+ECHO They will be embedded into the file either way
+CHOICE
+IF %ERRORLEVEL% EQU 2 set thME=--no-write-subs --no-write-thumbnail --no-write-info-json
+IF %ERRORLEVEL% EQU 1 set thME=--write-subs --write-thumbnail --write-info-json --convert-thumbnails png
+CLS
+EXIT /B
+
+:exOptions
+REM prompt for overwrites
+ECHO Should overwrites be allowed?
+ECHO.
+CHOICE
+IF %ERRORLEVEL% EQU 2 set overwrite=--no-force-overwrites
+IF %ERRORLEVEL% EQU 1 set overwrite=--force-overwrites
+ECHO overwrite = %overwrite% >> debug.log
+CLS
+REM prompt for archive use
+ECHO Should the archive file be used?
+ECHO The archive file prevents already-downloaded files from being re-downloaded
+ECHO.
+CHOICE
+IF %ERRORLEVEL% EQU 2 set arc=--no-download-archive
+IF %ERRORLEVEL% EQU 1 set arc=--download-archive "archive.txt"
+ECHO arc = %arc% >> debug.log
+CLS
+EXIT /B
