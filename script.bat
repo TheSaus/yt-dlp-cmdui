@@ -16,7 +16,7 @@ set vidPath=-o "%%(title)s.%%(ext)s" -P "%~dp0.\Video Output"
 REM audio file path
 set audPath=-o "%%(title)s.%%(ext)s" -P "%~dp0.\Audio Output"
 REM default arguments for yt-dlp
-set defaultArgs=--external-downloader=aria2c --external-downloader-args "-j 16 -x 16 -s 16 -k 1M" --no-warnings --progress --sponsorblock-remove default --throttled-rate 100K --write-link -c %allPath% -a "%~dp0.\URLs.txt"
+set defaultArgs=--external-downloader=aria2c --external-downloader-args "-j 16 -x 16 -s 16 -k 1M" --no-warnings --progress --sponsorblock-remove default --throttled-rate 100K --write-link --embed-subs --embed-metadata --embed-thumbnail -c %allPath% -a "%~dp0.\URLs.txt"
 REM default values for thumbnail writing/embedding/converting, and metadata writing/embedding
 set yesExtra=--write-thumbnail --write-info-json --convert-thumbnails png --write-subs
 set noExtra=--no-write-thumbnail --no-write-info-json
