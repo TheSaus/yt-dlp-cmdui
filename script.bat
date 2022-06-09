@@ -10,7 +10,7 @@ set defaultArgs=--external-downloader=aria2c --external-downloader-args "-j 16 -
 REM default values for thumbnail writing/embedding/converting, and metadata writing/embedding
 set yesExtra=--write-thumbnail --write-info-json --convert-thumbnails png --write-subs
 set noExtra=--no-write-thumbnail --no-write-info-json
-
+ECHO. > debug.log
 :Start
 REM check if required files exist, if not, download them
 if not exist "%~dp0\yt-dlp.exe" goto dlYTDLP
@@ -22,7 +22,6 @@ REM update yt-dlp
 yt-dlp -U
 REM Restart point, avoids yt-dlp update and required file check
 :Restart
-ECHO. > debug.log
 CLS
 ECHO yt-dlp-cmdui 2.0
 REM prompt for media type
@@ -138,14 +137,14 @@ ECHO Would you like to download it?
 CHOICE
 IF ERRORLEVEL 2 GOTO End
 IF ERRORLEVEL 1 ECHO Downloading...
-powershell -command "Invoke-WebRequest -OutFile aria2c.zip -Uri https://github.com/aria2/aria2/releases/download/release-1.36.0/aria2-1.36.0-win-64bit-build1.zip"
-powershell -command "Expand-Archive aria2c.zip -Force"
-FOR /F "tokens=*" %%a in ('Where /R %~dp0\ aria2c.exe') do SET arialocat=%%a
-move %arialocat% %~dp0\ 2> nul
-del "%~dp0\aria2c.zip" 2> nul
-rd /Q /S %~dp0\aria2c 2> nul
-if not exist "%~dp0\aria2c.exe" goto dlARIA2C
-ECHO aria2c has been downloaded
+powershell -command "Invoke-WebRequest -OutFile aria2c.zip -Uri https://github.com/aria2/aria2/releases/download/release-1.36.0/aria2-1.36.0-win-64bit-build1.zip" >> debug.log
+powershell -command "Expand-Archive aria2c.zip -Force" >> debug.log
+FOR /F "tokens=*" %%a in ('Where /R "%~dp0\." aria2c.exe') do SET arialocat=%%a
+move "%arialocat%" "%~dp0\." >> debug.log
+del "%~dp0\aria2c.zip" >> debug.log
+rd /Q /S "%~dp0\aria2c" >> debug.log
+if not exist "%~dp0\aria2c.exe" goto dlARIA2C >> debug.log
+ECHO aria2c has been downloaded 
 ECHO.
 GOTO Start
 
@@ -157,12 +156,12 @@ IF ERRORLEVEL 2 GOTO End
 IF ERRORLEVEL 1 ECHO Downloading...
 powershell -command "Invoke-WebRequest -OutFile ffmpeg.zip -Uri https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-gpl.zip"
 powershell -command "Expand-Archive ffmpeg.zip -Force"
-FOR /F "tokens=*" %%a in ('Where /R %~dp0\ ffmpeg.exe') do SET ffmpeg=%%a
-FOR /F "tokens=*" %%a in ('Where /R %~dp0\ ffprobe.exe') do SET ffprobe=%%a
-move %ffmpeg% %~dp0\ 2> nul
-move %ffprobe% %~dp0\ 2> nul
+FOR /F "tokens=*" %%a in ('Where /R "%~dp0\." ffmpeg.exe') do SET ffmpeg=%%a
+FOR /F "tokens=*" %%a in ('Where /R "%~dp0\." ffprobe.exe') do SET ffprobe=%%a
+move %ffmpeg% "%~dp0\." 2> nul
+move %ffprobe% "%~dp0\." 2> nul
 del "%~dp0\ffmpeg.zip" 2> nul
-rd /Q /S %~dp0\ffmpeg 2> nul
+rd /Q /S "%~dp0\ffmpeg" 2> nul
 if not exist "%~dp0\ffprobe.exe" GOTO dlFFMPEG
 if not exist "%~dp0\ffmpeg.exe" GOTO dlFFMPEG
 ECHO ffmpeg and ffprobe have downloaded
