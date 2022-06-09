@@ -158,8 +158,8 @@ powershell -command "Invoke-WebRequest -OutFile ffmpeg.zip -Uri https://github.c
 powershell -command "Expand-Archive ffmpeg.zip -Force"
 FOR /F "tokens=*" %%a in ('Where /R "%~dp0\." ffmpeg.exe') do SET ffmpeg=%%a
 FOR /F "tokens=*" %%a in ('Where /R "%~dp0\." ffprobe.exe') do SET ffprobe=%%a
-move %ffmpeg% "%~dp0\." 2> nul
-move %ffprobe% "%~dp0\." 2> nul
+move "%ffmpeg%" "%~dp0\." 2> nul
+move "%ffprobe%" "%~dp0\." 2> nul
 del "%~dp0\ffmpeg.zip" 2> nul
 rd /Q /S "%~dp0\ffmpeg" 2> nul
 if not exist "%~dp0\ffprobe.exe" GOTO dlFFMPEG
