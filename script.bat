@@ -188,7 +188,7 @@ REM prompt for overwrites
 ECHO Should overwrites be allowed?
 ECHO.
 CHOICE
-IF %ERRORLEVEL% EQU 2 set overwrite=--no-force-overwrites
+IF %ERRORLEVEL% EQU 2 set overwrite=--no-force-overwrites --no-overwrites
 IF %ERRORLEVEL% EQU 1 set overwrite=--force-overwrites
 ECHO overwrite = %overwrite% >> debug.log
 CLS
