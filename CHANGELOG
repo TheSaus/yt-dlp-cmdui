@@ -3,10 +3,10 @@ Changelog for yt-dlp-cmdui, made by The-Saus
 ---------------------------------------------------------------------------------------------------
 # 06/06/2022 | Version 2
 ## Additions
-- Added -P arguments to separate directories for certain files.
-  - Temporary files go into their own folder instead of the output folder.
-  - Thumbnails, Subtitles, and Metadata now get saved to their own folders.
-  - A .url file is generated for each (Video/Audio) download in its own folder. this should work as a sort of history.
+- Added -P arguments to separate each Video/Audio download into it's own folder.
+  - Temporary files go into the tmp folder instead of the output folder.
+  - Thumbnails, Subtitles, and Metadata all get downloaded to their corresponding Video/Audio folder
+  - A .url file is now also added to each Video/Audio download, so you can keep track of where it came from
 - Added Optional Subtitle Writing
   - Works the same as Thumbnail/Metadata writing, just makes a file on disk.
 - Added Custom Audio Preset, Allowing you to choose bitrate
