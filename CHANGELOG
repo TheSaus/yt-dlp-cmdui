@@ -1,6 +1,10 @@
 Changelog for yt-dlp-cmdui, made by The-Saus
 
 ---------------------------------------------------------------------------------------------------
+# 08/06/2022 | Version 2.0.2
+## Fixes
+- i missed more quotation marks god damnit
+---------------------------------------------------------------------------------------------------
 # 08/06/2022 | Version 2.0.1
 ## Fixes
 - Fixed missing double quotes in some parts of the code, prevented dependency downloader from working
