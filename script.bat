@@ -1,22 +1,12 @@
 @echo off
 REM temp path
 set tmpPath=-P "temp:%~dp0.\tmp"
-REM thumbnail path
-set thumPath=-P "thumbnail:Thumbnails"
-REM metadata path
-set metaPath=-P "infojson:Metadata"
-REM subtitles path
-set subtPath=-P "subtitle:Subtitles"
-REM link path
-set linkPath=-P "link:Links"
-REM combine all %xPath%
-set allPath=%pPath% %tmpPath% %thumPath% %metaPath% %subtPath% %linkPath%
 REM video file path
-set vidPath=-o "%%(title)s.%%(ext)s" -P "%~dp0.\Video Output"
+set vidPath=-o "%%(title)s\%%(title)s.%%(ext)s" -P "%~dp0.\Video Output"
 REM audio file path
-set audPath=-o "%%(title)s.%%(ext)s" -P "%~dp0.\Audio Output"
+set audPath=-o "%%(title)s\%%(title)s.%%(ext)s" -P "%~dp0.\Audio Output"
 REM default arguments for yt-dlp
-set defaultArgs=--external-downloader=aria2c --external-downloader-args "-j 16 -x 16 -s 16 -k 1M" --no-warnings --progress --sponsorblock-remove default --throttled-rate 100K --write-link --embed-subs --embed-metadata --embed-thumbnail -c %allPath% -a "%~dp0.\URLs.txt"
+set defaultArgs=--external-downloader=aria2c --external-downloader-args "-j 16 -x 16 -s 16 -k 1M" --no-warnings --progress --sponsorblock-remove default --throttled-rate 100K --write-link --embed-subs --embed-metadata --embed-thumbnail -c %tmpPath% -a "%~dp0.\URLs.txt"
 REM default values for thumbnail writing/embedding/converting, and metadata writing/embedding
 set yesExtra=--write-thumbnail --write-info-json --convert-thumbnails png --write-subs
 set noExtra=--no-write-thumbnail --no-write-info-json
