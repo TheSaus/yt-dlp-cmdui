@@ -6,7 +6,7 @@ set vidPath=-o "%%(title)s\%%(title)s.%%(ext)s" -P "%~dp0.\Video Output"
 REM audio file path
 set audPath=-o "%%(title)s\%%(title)s.%%(ext)s" -P "%~dp0.\Audio Output"
 REM default arguments for yt-dlp
-set defaultArgs=--external-downloader=aria2c --external-downloader-args "-j 16 -x 16 -s 16 -k 1M" --no-warnings --progress --sponsorblock-remove default --throttled-rate 100K --write-link --embed-subs --embed-metadata --embed-thumbnail -c %tmpPath% -a "%~dp0.\URLs.txt"
+set defaultArgs=--external-downloader=aria2c --external-downloader-args "-j 16 -x 16 -s 16 -k 1M" --no-warnings --progress --console-title --progress-template "download-title:%%(info.id)s-%%(progress.eta)s"--sponsorblock-remove default --throttled-rate 100K --write-link --embed-subs --embed-metadata --embed-thumbnail -c %tmpPath% -a "%~dp0.\URLs.txt"
 REM default values for thumbnail writing/embedding/converting, and metadata writing/embedding
 set yesExtra=--write-thumbnail --write-info-json --convert-thumbnails png --write-subs
 set noExtra=--no-write-thumbnail --no-write-info-json
@@ -105,7 +105,7 @@ GOTO Complete
 CLS
 ECHO Input download link, only 1
 set /p url=
-aria2c -d "%~dp0.\General File Output" -x 16 -s 16 -j 16 -k 1M --seed-time=0 --seed-ratio=0.1 --file-allocation=prealloc --max-download-limit=0 "%url%"
+aria2c -d "%~dp0.\General File Output" -x 16 -s 16 -j 16 -k 1M --seed-time=0 --seed-ratio=0.1 --file-allocation=prealloc --max-download-limit=0 --bt-max-peers=0 "%url%"
 GOTO Complete
 
 REM end of script
