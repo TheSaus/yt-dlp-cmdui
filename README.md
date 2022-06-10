@@ -18,7 +18,7 @@ Made by The-Saus
     - 1440p
     - 4k
   - Both Video Preset and Video Custom will ask if you want to download the Thumbnails, Subtitles, and Metadata as separate files
-  - Each Video File will be saved to it's own folder, along with the respective thumbnail file, subtitle file, and metadata file
+- Each Video File will be saved to it's own folder, along with the respective thumbnail file, subtitle file, and metadata file
 
 ## Audio Downloads
 - When Downloading Audio, you can choose between 'Audio Preset' or 'Audio Custom'
@@ -29,7 +29,7 @@ Made by The-Saus
     - 128kbps
     - 256kbps
   - Both Audio Preset and Audio Custom will ask if you want to download the Thumbnails, Subtitles, and Metadata as separate files
-  - Each Audio File will be saved to it's own folder, along with the respective thumbnail file, subtitle file, and metadata file
+- Each Audio File will be saved to it's own folder, along with the respective thumbnail file, subtitle file, and metadata file
 
 ## General File Downloads
 This script isn't just for downloading Videos or Audio, it can also download whatever aria2 supports
@@ -46,7 +46,7 @@ This script isn't just for downloading Videos or Audio, it can also download wha
   - Sponsors
   - Self Promotions
   - Previews
-You can read more about Sponsorblock Integration on the [yt-dlp github page](https://github.com/yt-dlp/yt-dlp#sponsorblock-options)
+- You can read more about Sponsorblock Integration on the [yt-dlp github page](https://github.com/yt-dlp/yt-dlp#sponsorblock-options)
 
 ## Installation and Requirements
 ### Requirements
