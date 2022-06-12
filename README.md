@@ -39,6 +39,12 @@ This script isn't just for downloading Videos or Audio, it can also download wha
   - -s 16 [info](http://aria2.github.io/manual/en/html/aria2c.html#cmdoption-k)
   - -j 16 [info](http://aria2.github.io/manual/en/html/aria2c.html#cmdoption-j)
   - -k 1M [info](http://aria2.github.io/manual/en/html/aria2c.html#cmdoption-s)
+  - --seed-time=0 [info](http://aria2.github.io/manual/en/html/aria2c.html#cmdoption-seed-time)
+  - --referer=* [info](http://aria2.github.io/manual/en/html/aria2c.html#cmdoption-referer)
+  - --seed-ratio=0.1 [info](http://aria2.github.io/manual/en/html/aria2c.html#cmdoption-seed-ratio)
+  - --file-allocation=prealloc [info](http://aria2.github.io/manual/en/html/aria2c.html#cmdoption-file-allocation)
+  - --max-download-limit=0 [info](http://aria2.github.io/manual/en/html/aria2c.html#cmdoption-max-download-limit)
+  - --bt-max-peers=0 [info](http://aria2.github.io/manual/en/html/aria2c.html#cmdoption-bt-max-peers)
 ## Sponsorblock Integration
 - Sponsorblock removes unwanted portions of videos, including but not limited to;
   - Intros
