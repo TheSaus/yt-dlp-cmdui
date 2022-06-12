@@ -105,7 +105,7 @@ GOTO Complete
 CLS
 ECHO Input download link, only 1
 set /p url=
-aria2c -d "%~dp0.\General File Output" -x 16 -s 16 -j 16 -k 1M --seed-time=0 --seed-ratio=0.1 --file-allocation=prealloc --max-download-limit=0 --bt-max-peers=0 "%url%"
+aria2c -d "%~dp0.\General File Output" -x 16 -s 16 -j 16 -k 1M --seed-time=0 --referer=* --seed-ratio=0.1 --file-allocation=prealloc --max-download-limit=0 --bt-max-peers=0 "%url%"
 GOTO Complete
 
 REM end of script
