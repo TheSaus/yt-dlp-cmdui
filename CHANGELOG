@@ -1,5 +1,21 @@
 Changelog for yt-dlp-cmdui, made by The-Saus
-
+---------------------------------------------------------------------------------------------------
+# 26/06/2022 | Version 2.1
+## Additions
+- Added argument --no-overwrites
+- Added some aria2c arguments
+  - --seed-time=0 Disables after-download seeding
+  - --seed-ratio=0.1 Stops during-download seeding from going further than 10% of total file
+  - --file-allocation=prealloc Pre-Allocates space needed for file downloads
+  - --max-download-limit=0 Removes download speed limit
+  - --bt-max-peers=0 Removes max peer connection limit/allows unlimited number of peers
+  - --referer=* Provides an HTTP Referrer, fixing many download failures (AMD Graphics drivers as one example)
+- Console Title now displays progress
+- Added --recode-video mp4
+## Changes
+- Video format selection now uses bv*+ba/b instead of bv+ba/b
+  - bv+ba/b combines the best *video only* and audio only formats
+  - bv*+ba/b combines the best *video(with or without audio)* and audio only formats
 ---------------------------------------------------------------------------------------------------
 # 08/06/2022 | Version 2.0.2
 ## Fixes
