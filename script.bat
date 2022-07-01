@@ -6,7 +6,7 @@ set vidPath=-o "%%(title)s\%%(title)s.%%(ext)s" -P "%~dp0.\Video Output"
 REM audio file path
 set audPath=-o "%%(title)s\%%(title)s.%%(ext)s" -P "%~dp0.\Audio Output"
 REM default arguments for yt-dlp
-set defaultArgs=--external-downloader=aria2c --external-downloader-args "-j 16 -x 16 -s 16 -k 1M" --no-warnings --progress --console-title --progress-template "download-title:%%(info.id)s-%%(progress.eta)s"--sponsorblock-remove default --throttled-rate 100K --write-link --embed-subs --embed-metadata --embed-thumbnail -c %tmpPath% --recode-video mp4 -a "%~dp0.\URLs.txt" 
+set defaultArgs=--external-downloader=aria2c --external-downloader-args "-j 16 -x 16 -s 16 -k 1M" --no-warnings --progress --console-title --progress-template "download-title:%%(info.id)s-%%(progress.eta)s"--sponsorblock-remove default --throttled-rate 100K --write-link --embed-subs --embed-metadata --embed-thumbnail -c %tmpPath% -a "%~dp0.\URLs.txt" 
 REM default values for thumbnail writing/embedding/converting, and metadata writing/embedding
 set yesExtra=--write-thumbnail --write-info-json --convert-thumbnails png --write-subs
 set noExtra=--no-write-thumbnail --no-write-info-json
@@ -23,7 +23,7 @@ yt-dlp -U
 REM Restart point, avoids yt-dlp update and required file check
 :Restart
 CLS
-ECHO yt-dlp-cmdui 2.1
+ECHO yt-dlp-cmdui 2.1.1
 REM prompt for media type
 ECHO What do you want to download?
 ECHO.
@@ -52,22 +52,22 @@ ECHO Press 2 for 128kbps (High Quality, uncommon)
 ECHO Press 3 for 96kbps  (Standard Quality, Most common)
 ECHO Press 4 for 64kbps  (Best used for talk/radio)
 CHOICE /c 1234 /n
-IF %ERRORLEVEL% EQU 4 set abr=64
-IF %ERRORLEVEL% EQU 3 set abr=96
-IF %ERRORLEVEL% EQU 2 set abr=128
-IF %ERRORLEVEL% EQU 1 set abr=256
+IF %ERRORLEVEL% EQU 4 set abr=64K
+IF %ERRORLEVEL% EQU 3 set abr=96K
+IF %ERRORLEVEL% EQU 2 set abr=128K
+IF %ERRORLEVEL% EQU 1 set abr=256K
 ECHO abr = %abr% >> debug.log
 CLS
 REM download command
 ECHO Starting downloads, this might take a while
-yt-dlp %audPath% -f "ba[abr<=%abr%]" --extract-audio --audio-format mp3 --audio-quality 0 %arc% %overwrite% %yesExtra% %defaultArgs% 2>> debug.log
+yt-dlp %audPath% -f ba --extract-audio --audio-format mp3 --audio-quality %abr% %arc% %overwrite% %yesExtra% %defaultArgs% 2>> debug.log
 GOTO Complete
 
 :aDL_defHD
 CALL :Options
 REM download command
 ECHO Starting downloads, this might take a while
-yt-dlp %audPath% -f ba --extract-audio --audio-format mp3 --audio-quality 0 --force-overwrites --download-archive "archive.txt" %yesExtra% %defaultArgs% 2>> debug.log
+yt-dlp %audPath% -f ba --extract-audio --audio-format mp3 --audio-quality 96K --force-overwrites --download-archive "archive.txt" %yesExtra% %defaultArgs% 2>> debug.log
 GOTO Complete
 
 :vDL
@@ -92,13 +92,13 @@ ECHO vH = %vH% >> debug.log
 CLS
 REM download command
 ECHO Starting downloads, this might take a while
-yt-dlp %vidPath% -f "bv*[width<=%vW%][height<=%vH%]+ba/b" --merge-output-format mp4 %arc% %overwrite% %thME% %defaultArgs% 2>> debug.log
+yt-dlp %vidPath% -f "bv*[width<=%vW%][height<=%vH%]+ba/b" --merge-output-format mp4 --recode-video mp4 %arc% %overwrite% %thME% %defaultArgs% 2>> debug.log
 GOTO Complete
 
 :vDL_defHD
 CALL :Options
 ECHO Starting downloads, this might take a while
-yt-dlp %vidPath% -f "bv*[width<=1920][height<=1080]+ba/b" --merge-output-format mp4 --force-overwrites %thME% --download-archive "archive.txt" %defaultArgs% 2>> debug.log
+yt-dlp %vidPath% -f "bv*[width<=1920][height<=1080]+ba/b" --merge-output-format mp4 --recode-video mp4 --force-overwrites %thME% --download-archive "archive.txt" %defaultArgs% 2>> debug.log
 GOTO Complete
 
 :generalDownloader
