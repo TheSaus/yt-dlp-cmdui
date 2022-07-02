@@ -33,8 +33,10 @@ ECHO Press 2 for Audio [96kbps/Yes Overwrites/Yes Archive/MP3]
 ECHO Press 3 for Video [Custom/MP4]
 ECHO Press 4 for Video [1080p/Yes Overwrites/Yes Archive/MP4]
 ECHO Press 5 for General File Downloads [For downloading anything else at high speeds]
+ECHO Press 6 to Clean up the script directory [Deletes temp folder and .log files]
 ECHO.
-CHOICE /c 12345 /n
+CHOICE /c 123456 /n
+IF ERRORLEVEL 6 GOTO cleaner
 IF ERRORLEVEL 5 GOTO generalDownloader
 IF ERRORLEVEL 4 GOTO vDL_defHD
 IF ERRORLEVEL 3 GOTO vDL
