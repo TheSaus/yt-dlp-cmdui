@@ -58,9 +58,14 @@ IF %ERRORLEVEL% EQU 2 set abr=128K
 IF %ERRORLEVEL% EQU 1 set abr=256K
 ECHO abr = %abr% >> debug.log
 CLS
+ECHO If you want to, you can supply additional arguments for yt-dlp now
+ECHO If you don't, just skip this step
+set /p customArgs=
+ECHO customArgs = %customArgs% >> debug.log
+CLS
 REM download command
 ECHO Starting downloads, this might take a while
-yt-dlp %audPath% -f ba --extract-audio --audio-format mp3 --audio-quality %abr% %arc% %overwrite% %yesExtra% %defaultArgs% 2>> debug.log
+yt-dlp %audPath% -f ba --extract-audio --audio-format mp3 --audio-quality %abr% %arc% %overwrite% %yesExtra% %defaultArgs% %customArgs% 2>> debug.log
 GOTO Complete
 
 :aDL_defHD
@@ -90,9 +95,14 @@ IF %ERRORLEVEL% EQU 1 set vW=3840 && set vH=2160
 ECHO vW = %vW% >> debug.log
 ECHO vH = %vH% >> debug.log
 CLS
+ECHO If you want to, you can supply additional arguments for yt-dlp now
+ECHO If you don't, just skip this step
+set /p customArgs=
+ECHO customArgs = %customArgs% >> debug.log
+CLS
 REM download command
 ECHO Starting downloads, this might take a while
-yt-dlp %vidPath% -f "bv*[width<=%vW%][height<=%vH%]+ba/b" --merge-output-format mp4 --recode-video mp4 %arc% %overwrite% %thME% %defaultArgs% 2>> debug.log
+yt-dlp %vidPath% -f "bv*[width<=%vW%][height<=%vH%]+ba/b" --merge-output-format mp4 --recode-video mp4 %arc% %overwrite% %thME% %defaultArgs% %customArgs% 2>> debug.log
 GOTO Complete
 
 :vDL_defHD
