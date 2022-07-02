@@ -120,6 +120,14 @@ set /p url=
 aria2c -d "%~dp0.\General File Output" -x 16 -s 16 -j 16 -k 1M --seed-time=0 --referer=* --seed-ratio=0.1 --file-allocation=prealloc --max-download-limit=0 --bt-max-peers=0 "%url%"
 GOTO Complete
 
+:cleaner
+CLS
+rd "%~dp0.\tmp" 2> nul
+del "%~dp0.\debug.log" 2> nul
+ECHO Finished cleaning up
+timeout /t 1 2> nul
+GOTO Complete
+
 REM end of script
 :Complete
 CLS
