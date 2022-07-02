@@ -11,10 +11,13 @@ REM default values for thumbnail writing/embedding/converting, and metadata writ
 set yesExtra=--write-thumbnail --write-info-json --convert-thumbnails png --write-subs
 set noExtra=--no-write-thumbnail --no-write-info-json
 ECHO. > debug.log
+set debugMode=0 & REM 1 to enable, 0 to disable
+IF %debugMode% EQU 1 GOTO dbug 2> nul
+REM for debugging and testing purposes, to use type :dbug at any point and the script will start there instead of :Start
 :Start
 REM check if required files exist, if not, download them
-if not exist "%~dp0\yt-dlp.exe" goto dlYTDLP
 if not exist "%~dp0\aria2c.exe" goto dlARIA2C
+if not exist "%~dp0\yt-dlp.exe" goto dlYTDLP
 if not exist "%~dp0\ffmpeg.exe" goto dlFFMPEG
 if not exist "%~dp0\ffprobe.exe" goto dlFFMPEG
 ECHO.
@@ -139,18 +142,6 @@ CHOICE
 IF ERRORLEVEL 2 EXIT
 IF ERRORLEVEL 1 GOTO Restart
 
-:dlYTDLP
-ECHO yt-dlp.exe is required, but missing
-ECHO Would you like to download it?
-CHOICE
-IF ERRORLEVEL 2 GOTO End
-IF ERRORLEVEL 1 ECHO Downloading...
-powershell -command "Invoke-WebRequest -OutFile yt-dlp.exe -Uri https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp.exe"
-if not exist "%~dp0\yt-dlp.exe" goto dlYTDLP
-ECHO yt-dlp has been downloaded
-ECHO.
-GOTO Start
-
 :dlARIA2C
 ECHO aria2c.exe is required, but missing
 ECHO Would you like to download it?
@@ -163,8 +154,20 @@ FOR /F "tokens=*" %%a in ('Where /R "%~dp0\." aria2c.exe') do SET arialocat=%%a
 move "%arialocat%" "%~dp0\." >> debug.log
 del "%~dp0\aria2c.zip" >> debug.log
 rd /Q /S "%~dp0\aria2c" >> debug.log
-if not exist "%~dp0\aria2c.exe" goto dlARIA2C >> debug.log
+if not exist "%~dp0\aria2c.exe" goto dlARIA2C  && ECHO There appears to be an issue, retrying...
 ECHO aria2c has been downloaded 
+ECHO.
+GOTO Start
+
+:dlYTDLP
+ECHO yt-dlp.exe is required, but missing
+ECHO Would you like to download it?
+CHOICE
+IF ERRORLEVEL 2 GOTO End
+IF ERRORLEVEL 1 ECHO Downloading...
+aria2c -x 16 -s 16 -j 16 -k 1M --seed-time=0 --referer=* --seed-ratio=0.1 --file-allocation=prealloc --max-download-limit=0 --bt-max-peers=0 "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp.exe"
+if not exist "%~dp0\yt-dlp.exe" goto dlYTDLP && ECHO There appears to be an issue, retrying...
+ECHO yt-dlp has been downloaded
 ECHO.
 GOTO Start
 
@@ -174,7 +177,7 @@ ECHO Would you like to download it?
 CHOICE
 IF ERRORLEVEL 2 GOTO End
 IF ERRORLEVEL 1 ECHO Downloading...
-powershell -command "Invoke-WebRequest -OutFile ffmpeg.zip -Uri https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-gpl.zip"
+aria2c -x 16 -s 16 -j 16 -k 1M --seed-time=0 --referer=* --seed-ratio=0.1 --file-allocation=prealloc --max-download-limit=0 --bt-max-peers=0 -o "ffmpeg.zip" "https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-gpl.zip"
 powershell -command "Expand-Archive ffmpeg.zip -Force"
 FOR /F "tokens=*" %%a in ('Where /R "%~dp0\." ffmpeg.exe') do SET ffmpeg=%%a
 FOR /F "tokens=*" %%a in ('Where /R "%~dp0\." ffprobe.exe') do SET ffprobe=%%a
@@ -182,8 +185,8 @@ move "%ffmpeg%" "%~dp0\." 2> nul
 move "%ffprobe%" "%~dp0\." 2> nul
 del "%~dp0\ffmpeg.zip" 2> nul
 rd /Q /S "%~dp0\ffmpeg" 2> nul
-if not exist "%~dp0\ffprobe.exe" GOTO dlFFMPEG
-if not exist "%~dp0\ffmpeg.exe" GOTO dlFFMPEG
+if not exist "%~dp0\ffprobe.exe" GOTO dlFFMPEG && ECHO There appears to be an issue, retrying...
+if not exist "%~dp0\ffmpeg.exe" GOTO dlFFMPEG && ECHO There appears to be an issue, retrying...
 ECHO ffmpeg and ffprobe have downloaded
 ECHO.
 GOTO Start
