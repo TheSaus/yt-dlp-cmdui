@@ -125,7 +125,7 @@ GOTO Complete
 
 :cleaner
 CLS
-rd "%~dp0.\tmp" 2> nul
+rd /Q /S "%~dp0.\tmp" 2> nul
 del "%~dp0.\debug.log" 2> nul
 ECHO Finished cleaning up
 timeout /t 1 2> nul
