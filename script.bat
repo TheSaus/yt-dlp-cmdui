@@ -26,7 +26,7 @@ yt-dlp -U
 REM Restart point, avoids yt-dlp update and required file check
 :Restart
 CLS
-ECHO yt-dlp-cmdui 2.1.1
+ECHO yt-dlp-cmdui 2.2
 REM prompt for media type
 ECHO What do you want to download?
 ECHO.

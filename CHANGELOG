@@ -1,5 +1,14 @@
 Changelog for yt-dlp-cmdui, made by The-Saus
 ---------------------------------------------------------------------------------------------------
+# 07/07/2022 | Version 2.2
+## Additions
+- New option during Video Custom and Audio Custom, allowing you to input custom yt-dlp arguments before the download starts
+- Cleaner option now available, cleans the script directory by getting rid of ~\tmp and any debug files
+## Changes
+- Asset download scripts have been improved
+  - aria2c check runs first, downloads using powershell Invoke-WebRequest
+  - yt-dlp, ffmpeg and ffprobe now download using the much faster aria2c 
+---------------------------------------------------------------------------------------------------
 # 26/06/2022 | Version 2.1
 ## Additions
 - Added argument --no-overwrites
