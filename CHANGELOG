@@ -10,6 +10,7 @@ Changelog for yt-dlp-cmdui, made by The-Saus
 - Added a slight timeout after downloads are complete
 - Different Resolutions now have definitions
 - console title is now set to yt-dlp-cmdui v*.*.*
+- Before URLs.txt is reset, it's contents get moved to oldURLs.txt
 ## Changes
 - Changed internal label :Restart to :mainMenu
 - All Menus are much more readable
