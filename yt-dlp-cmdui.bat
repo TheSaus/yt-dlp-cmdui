@@ -1,5 +1,6 @@
 @echo off
-title yt-dlp-cmdui v3.0.0, Made by The-Saus
+set "version=v3.0.0"
+title yt-dlp-cmdui %version%, Made by The-Saus
 REM Config for yt-dlp-cmdui, made by The-Saus
 REM %~dp0 means 'directory of script' i.e. where the script.bat file is
 
@@ -29,7 +30,6 @@ echo: Checking for yt-dlp.exe updates...
 yt-dlp -U
 FOR /F "tokens=*" %%a in ('aria2c --dry-run  https://github.com/TheSaus/yt-dlp-cmdui/releases/latest ^| findstr -i -r -c:"Download complete.*/v.*"') do set "str=%%a"
 set "result=%str:/=" & set "result=%"
-set "version=v3.0.0"
 :mainMenu
 CLS
 echo:
