@@ -1,5 +1,11 @@
 Changelog for yt-dlp-cmdui, made by The-Saus
 ---------------------------------------------------------------------------------------------------
+# 30/07/2022 | Version 3.0.1 Hotfix
+## Fixes and Changes
+- Fixed self updater script
+  - 'unsupported compression type' when trying to unzip downloaded update zip
+  - Replace command threw errors, replaced with move /y to force overwrite
+---------------------------------------------------------------------------------------------------
 # 30/07/2022 | Version 3.0.0
 ## Additions
 - Config section at top of script file

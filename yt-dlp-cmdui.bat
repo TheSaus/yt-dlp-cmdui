@@ -1,5 +1,5 @@
 @echo off
-set "version=v3.0.0"
+set "version=v3.0.1"
 title yt-dlp-cmdui %version%, Made by The-Saus
 REM Config for yt-dlp-cmdui, made by The-Saus
 REM %~dp0 means 'directory of script' i.e. where the script.bat file is
@@ -281,7 +281,10 @@ CLS
 EXIT /B
 
 :update
-aria2c -x 16 -s 16 -j 16 -k 1M --referer=* --file-allocation=prealloc --max-download-limit=0 "https://github.com/TheSaus/yt-dlp-cmdui/releases/latest/download/yt-dlp-cmdui.zip"
-powershell -command "Expand-Archive yt-dlp-cmdui.zip -Force"
-FOR /F "tokens=*" %%a in ('Where /R "%~dp0\." yt-dlp-cmdui.bat') do SET cmdui=%%a
-start cmd /c replace "%cmdui%" "%~dp0\." ^&^& del "%~dp0\yt-dlp-cmdui.zip" ^&^& rd /Q /S "%~dp0\yt-dlp-cmdui" ^&^& yt-dlp-cmdui.bat && EXIT 2> nul
+del "%~dp0\yt-dlp-cmdui.zip"
+rd /Q /S "%~dp0\yt-dlp-cmdui"
+aria2c -x 16 -s 16 -j 16 -k 1M --referer=* --file-allocation=prealloc --max-download-limit=0 --allow-overwrite=true "https://github.com/TheSaus/yt-dlp-cmdui/releases/latest/download/yt-dlp-cmdui.zip"
+timeout /t 1 > nul
+powershell -command "Expand-Archive yt-dlp-cmdui.zip"
+timeout /t 1 > nul
+move /y "%~dp0\.\yt-dlp-cmdui\yt-dlp-cmdui.bat" "%~dp0\.\yt-dlp-cmdui.bat" && del "%~dp0\yt-dlp-cmdui.zip" && rd /Q /S "%~dp0\yt-dlp-cmdui" && EXIT 2> nul
