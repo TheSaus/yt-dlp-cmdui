@@ -1,5 +1,31 @@
 Changelog for yt-dlp-cmdui, made by The-Saus
 ---------------------------------------------------------------------------------------------------
+# 30/07/2022 | Version 3.0.0
+## Additions
+- Config section at top of script file
+- yt-dlp now notifies when it is checking for updates instead of leaving the screen blank
+- Updater script is now embedded into the file, can update itself automatically
+- New 'Return to main menu' Option on the 'Choose your bitrate/resolution' step
+- Custom arguments are now prompted instead of forced
+- Added a slight timeout after downloads are complete
+- Different Resolutions now have definitions
+- console title is now set to yt-dlp-cmdui v*.*.*
+## Changes
+- Changed internal label :Restart to :mainMenu
+- All Menus are much more readable
+- :cleaner now deletes all output folders instead of just tmp
+- Renamed General File Downloader to File Downloader
+- Cleaned up/Corrected audio bitrate definitions 
+- File Downloader now uses URLs.txt, allowing multiple downloads at once
+- Video quality selection changed to favour highest resolution, then highest bitrate
+- Improved end of script dialogue
+- Changed script name to yt-dlp-cmdui.bat from script.bat
+  - this *should* help make it easier to use
+## Removals
+- Removed --console-title argument
+  - addition of custom console title clashes with this
+- Removed unused internal variables
+---------------------------------------------------------------------------------------------------
 # 07/07/2022 | Version 2.2
 ## Additions
 - New option during Video Custom and Audio Custom, allowing you to input custom yt-dlp arguments before the download starts
