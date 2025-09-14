@@ -66,7 +66,7 @@ This script isn't just for downloading Videos or Audio, it can also download wha
 ### Installation
 1. Download the latest release from the release page
 2. Extract the contents of yt-dlp-cmdui.zip, make sure to put the extracted files into their own folder
-3. run script.bat
+3. run yt-dlp-cmdui.bat
 4. the script will download all required dependencies if you allow it, without access to said files the script will not work
 
 Alternatively, you can download the required dependencies yourself
